@@ -1,7 +1,8 @@
 (ns invistron.scrape.core
   (:require
    [clojure.string :as string]
-   [clj-http.client :as client]
+   [etaoin.api :as etaoin]
+   [etaoin.keys :as k]
    [jsoup.soup :as soup]
    [mount.core :refer [defstate]]
    [invistron.config :refer [env]]
@@ -19,4 +20,14 @@
         numbers (range 1 (inc page-num))]
     (map #(n->page-url *url* %) numbers)))
 
-(defn page-url->product-urls [url])
+(soup/$ (soup/slurp! "/vagrant/index.html")
+        "div.product-list div.product-name a[href]"  ;; Jsoup selector
+        (soup/attr "abs:href"))
+
+(defn get-product-urls [url]
+  (soup/$ (soup/get! url)
+          "div.product-list div.product-name a[href]"  ;; Jsoup selector
+          (soup/attr "abs:href")))                     ;; attribute selector
+
+(defn all-product-urls []
+  (map get-product-urls (all-page-urls)))

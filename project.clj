@@ -32,7 +32,8 @@
                  [ring/ring-defaults "0.3.2"]
                  [selmer "1.12.14"]
                  [clj-http "3.10.0"]
-                 [clj-soup/clojure-soup "0.1.3"]]
+                 [clj-soup/clojure-soup "0.1.3"]
+                 [etaoin "0.3.5"]]
 
   :min-lein-version "2.0.0"
   
