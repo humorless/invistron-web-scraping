@@ -1,7 +1,7 @@
 (ns invistron.scrape.core
   (:require
    [clojure.string :as string]
-   [etaoin.api :as etaoin]
+   [etaoin.api :as w]
    [etaoin.keys :as k]
    [jsoup.soup :as soup]
    [mount.core :refer [defstate]]
@@ -20,9 +20,9 @@
         numbers (range 1 (inc page-num))]
     (map #(n->page-url *url* %) numbers)))
 
-(soup/$ (soup/slurp! "/vagrant/index.html")
-        "div.product-list div.product-name a[href]"  ;; Jsoup selector
-        (soup/attr "abs:href"))
+#_(soup/$ (soup/slurp! "/vagrant/index.html")
+          "div.product-list div.product-name a[href]"  ;; Jsoup selector
+          (soup/attr "abs:href"))
 
 (defn get-product-urls [url]
   (soup/$ (soup/get! url)
@@ -31,3 +31,9 @@
 
 (defn all-product-urls []
   (map get-product-urls (all-page-urls)))
+
+(def driver (w/chrome-headless))
+(w/go driver "https://invistron.en.taiwantrade.com/product-catalog/all-products.html?page=1&rows=20&productType=&sidx=&sord=&listDisplayMode=detail")
+(w/wait-visible driver {:fn/has-classes [:template :product-list]})
+(map #(w/get-element-attr-el driver % "href")
+     (w/query-all driver {:css "div.product-list div.product-name a"}))
