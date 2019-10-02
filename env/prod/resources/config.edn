@@ -1,6 +1,6 @@
 {:prod true
  :port 3000
  :nrepl-port 7000
- :page-num 94
+ :page-num 10
  :product-url "https://invistron.en.taiwantrade.com/product-catalog/all-products.html?page=PAGENUM&rows=100&productType=&sidx=&sord=&listDisplayMode=detail"
  :database-url "jdbc:sqlite:invistron.db"}
