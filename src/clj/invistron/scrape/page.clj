@@ -14,3 +14,22 @@
   (soup/$ (soup/get! url)
           "div.breadcrumb span a span"
           (soup/text)))
+
+(defn parse-breadcrumb [s-tuple]
+  {:type   (nth s-tuple 2)
+   :vendor (nth s-tuple 3)
+   :title  (nth s-tuple 4)})
+
+(defn get-model [url]
+  (soup/$ (soup/get! url)
+          "div.content div div dl dd"
+          (soup/text)))
+
+(defn parse-model [s-tuple]
+  {:model (first s-tuple)})
+
+(defn ->filename [url]
+  (string/replace
+   (string/replace url #"https://invistron.en.taiwantrade.com/product/" "")
+   #"html"
+   "md"))
