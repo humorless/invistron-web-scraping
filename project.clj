@@ -33,10 +33,11 @@
                  [selmer "1.12.14"]
                  [clj-http "3.10.0"]
                  [clj-soup/clojure-soup "0.1.3"]
-                 [etaoin "0.3.5"]]
+                 [etaoin "0.3.5"]
+                 [io.forward/yaml "1.0.9"]]
 
   :min-lein-version "2.0.0"
-  
+
   :source-paths ["src/clj"]
   :test-paths ["test/clj"]
   :resource-paths ["resources"]
@@ -61,7 +62,7 @@
                                  [ring/ring-devel "1.7.1"]
                                  [ring/ring-mock "0.4.0"]]
                   :plugins      [[com.jakemccrary/lein-test-refresh "0.24.1"]]
-                  
+
                   :source-paths ["env/dev/clj"]
                   :resource-paths ["env/dev/resources"]
                   :repl-options {:init-ns user}
