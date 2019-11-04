@@ -12,7 +12,7 @@
 
 (defn get-breadcrumb [url]
   (soup/$ (soup/get! url)
-          "div.breadcrumb span a span"
+          "div.breadcrumb > span > a > span"
           (soup/text)))
 
 (defn parse-breadcrumb [s-tuple]
@@ -22,11 +22,16 @@
 
 (defn get-model [url]
   (soup/$ (soup/get! url)
-          "div.content div div dl dd"
+          "div.content > div > div > dl > dd"
           (soup/text)))
 
 (defn parse-model [s-tuple]
   {:model (first s-tuple)})
+
+(defn get-img-url [url]
+  (soup/$ (soup/get! url)
+          "ul.zoom_thumbnails > li > a"
+          (soup/attr "abs:href")))
 
 (defn ->filename [url]
   (string/replace
