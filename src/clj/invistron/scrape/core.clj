@@ -41,7 +41,7 @@
 (defn scrape-and-spit [url]
   (prn "running ...")
   (doseq [product-url (scrape-product-urls-by-browser url)]
-    (spit "url.edn" (prn-str product-url) :append true)))
+    (spit "resources/url.edn" (prn-str product-url) :append true)))
 
 (defn process []
   (let [p-urls (all-page-urls)]
