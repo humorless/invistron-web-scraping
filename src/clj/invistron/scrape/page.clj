@@ -13,7 +13,7 @@
     (doall (map read-string (line-seq rdr)))))
 
 (defn get-breadcrumb [url]
-  (soup/$ (soup/get! url)
+  (soup/$ (soup/get! url :timeout 0)
           "div.breadcrumb > span > a > span"
           (soup/text)))
 
@@ -23,7 +23,7 @@
    :title  (nth s-tuple 4)})
 
 (defn get-model [url]
-  (soup/$ (soup/get! url)
+  (soup/$ (soup/get! url :timeout 0)
           "div.content > div > div > dl > dd"
           (soup/text)))
 
@@ -32,7 +32,7 @@
 
 (defn get-img-url [url]
   (first
-   (soup/$ (soup/get! url)
+   (soup/$ (soup/get! url :timeout 0)
            "ul.zoom_thumbnails > li > a"
            (soup/attr "abs:href"))))
 
@@ -43,6 +43,7 @@
    "md"))
 
 (defn download-image [url]
+  (prn "download image from " url)
   (let [img-url (get-img-url url)
         filename (string/replace img-url #"http.*/" "")]
     (clojure.java.io/copy
@@ -50,6 +51,7 @@
      (java.io.File. (str "image/" filename)))))
 
 (defn gen-md-file [url]
+  (prn "generate md file from " url)
   (let [f (->filename url)
         b (parse-breadcrumb (get-breadcrumb url))
         m (parse-model (get-model url))
@@ -57,3 +59,10 @@
         y-data (yaml/generate-string data :dumper-options {:flow-style :block})
         content (str "---\n" y-data "---\n")]
     (spit (str "md/" f) content)))
+
+(defn process [f]
+  (let [urls (read-urls)]
+    (pmap f urls)))
+
+;; (process gen-md-file)
+;; (process download-image)
