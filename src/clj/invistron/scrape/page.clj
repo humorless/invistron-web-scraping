@@ -30,6 +30,22 @@
 (defn parse-model [s-tuple]
   {:model (first s-tuple)})
 
+(defn get-table-left-columns [url]
+  (soup/$ (soup/get! url :timeout 0)
+          "#productDetails > div:nth-child(2) > div > table > tbody > tr > td:nth-child(1)"
+          (soup/text)))
+
+(defn parse-left-columns [s-tuple]
+  {:left-cols s-tuple})
+
+(defn get-table-right-columns [url]
+  (soup/$ (soup/get! url :timeout 0)
+          "#productDetails > div:nth-child(2) > div > table > tbody > tr > td:nth-child(2)"
+          (soup/text)))
+
+(defn parse-right-columns [s-tuple]
+  {:right-cols s-tuple})
+
 (defn get-img-url [url]
   (first
    (soup/$ (soup/get! url :timeout 0)
@@ -55,7 +71,9 @@
   (let [f (->filename url)
         b (parse-breadcrumb (get-breadcrumb url))
         m (parse-model (get-model url))
-        data (merge b m)
+        l (parse-left-columns (get-table-left-columns url))
+        r (parse-right-columns (get-table-right-columns url))
+        data (merge b m l r)
         y-data (yaml/generate-string data :dumper-options {:flow-style :block})
         content (str "---\n" y-data "---\n")]
     (spit (str "md/" f) content)))
