@@ -71,9 +71,10 @@
   (let [f (->filename url)
         b (parse-breadcrumb (get-breadcrumb url))
         m (parse-model (get-model url))
+        img-filename (string/replace (get-img-url url) #"http.*/" "")
         l (parse-left-columns (get-table-left-columns url))
         r (parse-right-columns (get-table-right-columns url))
-        data (merge b m l r)
+        data (merge b m l r {:img img-filename})
         y-data (yaml/generate-string data :dumper-options {:flow-style :block})
         content (str "---\n" y-data "---\n")]
     (spit (str "md/" f) content)))
